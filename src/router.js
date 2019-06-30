@@ -1,7 +1,8 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Login from "./views/login.vue"
-import Register from "./views/register"
+import Home from "./views/home"
+import User from "./views/user"
 
 Vue.use(Router);
 
@@ -13,9 +14,16 @@ export default new Router({
       component: Login
     },
     {
-      path: "/register",
-      name: "register",
-      component: Register
+      path: "/home",
+      name: "home",
+      component: Home,
+      children: [
+        {path:"/user",component:User}
+      ]
+    },
+    {
+      path: "/",
+      redirect:'/login'
     }
   ]
 });

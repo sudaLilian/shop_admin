@@ -57,25 +57,46 @@ export default {
   },
 
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          axios({
-            url: "http://localhost:8888/api/private/v1/login",
-            method: "post",
-            data: this.form
-          }).then(({ data: { data, meta } }) => {
-            console.log(data);
-            console.log(meta);
-            if (meta.status === 200) {
-              localStorage.setItem("token", data.token);
-              this.$router.push("/register");
-            }
-          });
-        }else{
-          return false
+    // submitForm(formName) {
+    //   this.$refs[formName].validate(valid => {
+    //     if (valid) {
+    //       axios({
+    //         url: "http://localhost:8888/api/private/v1/login",
+    //         method: "post",
+    //         data: this.form
+    //       }).then(({ data: { data, meta } }) => {
+    //         console.log(data);
+    //         console.log(meta);
+    //         if (meta.status === 200) {
+    //           localStorage.setItem("token", data.token);
+    //           this.$router.push("/home");
+    //         }
+    //       });
+    //     }else{
+    //       return false
+    //     }
+    //   });
+    // },
+    //async函数，await需要获取的是一个async函数
+    async submitForm(formName) {
+      let valid = await this.$refs[formName].validate();
+      if (valid) {
+        let res = await axios({
+          url: "http://localhost:8888/api/private/v1/login",
+          method: "post",
+          data: this.form
+        });
+        let {
+          data: { data, meta }
+        } = res;
+
+        if (meta.status === 200) {
+          localStorage.setItem("token", data.token);
+          this.$router.push("/home");
         }
-      });
+      } else {
+        return false;
+      }
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
