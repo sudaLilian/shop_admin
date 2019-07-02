@@ -6,7 +6,7 @@ import User from "./views/user"
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: "/login",
@@ -18,12 +18,24 @@ export default new Router({
       name: "home",
       component: Home,
       children: [
-        {path:"/user",component:User}
+        { path: "/user", component: User }
       ]
     },
     {
       path: "/",
-      redirect:'/login'
+      redirect: '/login'
     }
   ]
 });
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    next()
+    return
+  }
+  if (localStorage.getItem('token')) {
+    next()
+  } else {
+    router.push('/login')
+  }
+})
+export default router
